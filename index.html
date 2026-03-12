@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- 微信分享卡片 -->
+    <meta property="og:title" content="💌 给你的专属消息">
+    <meta property="og:description" content="点击查收一份特别的心意...">
+    <meta property="og:type" content="website">
+    <meta name="description" content="一份特别的心意，只给你">
+    
+    <!-- 微信内置浏览器优化 -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>💌 给你的专属消息</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(180deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* 卡片容器 */
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px 30px;
+            margin: 20px;
+            max-width: 340px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(255, 107, 107, 0.3);
+            text-align: center;
+            position: relative;
+            animation: cardAppear 0.8s ease-out;
+        }
+        
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        /* 信封图标 */
+        .envelope {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: envelopeShake 2s ease-in-out infinite;
+            display: inline-block;
+        }
+        
+        @keyframes envelopeShake {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        /* 标题 */
+        .card h1 {
+            color: #e74c3c;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+        
+        /* 内容 */
+        .card-content {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            margin: 20px 0;
+        }
+        
+        /* 爱心区域 */
+        .heart-section {
+            margin: 30px 0;
+            position: relative;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .heart-emoji {
+            font-size: 80px;
+            animation: heartbeat 1.2s ease-in-out infinite;
+            filter: drop-shadow(0 5px 15px rgba(231, 76, 60, 0.4));
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.15); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+        
+        /* 小爱心装饰 */
+        .mini-heart {
+            position: absolute;
+            font-size: 20px;
+            opacity: 0.6;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .mini-heart:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+        .mini-heart:nth-child(2) { top: 20%; right: 15%; animation-delay: 0.5s; }
+        .mini-heart:nth-child(3) { bottom: 20%; left: 10%; animation-delay: 1s; }
+        .mini-heart:nth-child(4) { bottom: 10%; right: 10%; animation-delay: 1.5s; }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(10deg); }
+        }
+        
+        /* 底部文字 */
+        .footer-text {
+            color: #999;
+            font-size: 14px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        /* 点击提示 */
+        .tap-hint {
+            position: fixed;
+            bottom: 30px;
+            color: rgba(255,255,255,0.9);
+            font-size: 14px;
+            animation: pulse 2s ease-in-out infinite;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        
+        /* 点击特效 */
+        .click-effect {
+            position: absolute;
+            pointer-events: none;
+            animation: clickPop 0.8s ease-out forwards;
+        }
+        
+        @keyframes clickPop {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(-50%, -100px) scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        /* 背景飘浮爱心 */
+        .bg-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: -1;
+        }
+        
+        .bg-heart {
+            position: absolute;
+            color: rgba(255,255,255,0.4);
+            font-size: 24px;
+            animation: bgFloat 6s ease-in infinite;
+        }
+        
+        @keyframes bgFloat {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-hearts" id="bgHearts"></div>
+    
+    <div class="card">
+        <div class="envelope">💌</div>
+        <h1>致最爱的你</h1>
+        
+        <div class="card-content">
+            遇见你，是我这辈子<br>
+            最美好的事情
+        </div>
+        
+        <div class="heart-section">
+            <span class="mini-heart">💕</span>
+            <span class="mini-heart">💖</span>
+            <span class="mini-heart">💗</span>
+            <span class="mini-heart">💓</span>
+            <span class="heart-emoji">❤️</span>
+        </div>
+        
+        <div class="card-content">
+            每一天都想告诉你<br>
+            我有多爱你
+        </div>
+        
+        <div class="footer-text">—— 你的专属</div>
+    </div>
+    
+    <div class="tap-hint">点击屏幕，释放爱心 ✨</div>
+
+    <script>
+        // 背景飘浮爱心
+        function createBgHeart() {
+            const container = document.getElementById('bgHearts');
+            const heart = document.createElement('div');
+            heart.className = 'bg-heart';
+            heart.innerHTML = ['❤️', '💖', '💕', '💗', '💓'][Math.floor(Math.random() * 5)];
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            container.appendChild(heart);
+            
+            setTimeout(() => heart.remove(), 8000);
+        }
+        
+        setInterval(createBgHeart, 1000);
+        
+        // 点击特效
+        document.addEventListener('click', (e) => {
+            const emojis = ['❤️', '💖', '💕', '💗', '💓', '😘', '🥰'];
+            const effect = document.createElement('div');
+            effect.className = 'click-effect';
+            effect.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+            effect.style.fontSize = (Math.random() * 20 + 30) + 'px';
+            effect.style.left = e.clientX + 'px';
+            effect.style.top = e.clientY + 'px';
+            document.body.appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 800);
+        });
+        
+        // 初始化一些背景爱心
+        for (let i = 0; i < 3; i++) {
+            setTimeout(createBgHeart, i * 300);
+        }
+        
+        // 微信分享优化
+        document.addEventListener('WeixinJSBridgeReady', function() {
+            // 微信内置浏览器准备好后，可以调用分享API
+            if (typeof WeixinJSBridge !== 'undefined') {
+                WeixinJSBridge.on('menu:share:appmessage', function(){
+                    WeixinJSBridge.invoke('sendAppMessage', {
+                        title: '💌 给你的专属消息',
+                        desc: '点击查收一份特别的心意...',
+                        link: window.location.href,
+                        imgUrl: ''
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>
